@@ -1,12 +1,14 @@
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 const Layout = () => {
   return (
     <div className="h-[70px]">
-      <header className="p-4 px-4 sm:px-6 lg:px-10 border-b border-gray-100">
+      <header className="p-4 border-b border-gray-100">
         <div className="flex items-center justify-between">
           {/* 가운데 정렬을 위해 flex-1 사용 */}
-          <div className="flex-1 text-center text-2xl font-bold">코인</div>
+          <Link to="/" className="flex items-center gap-2 font-bold text-2xl">
+            <span className="text-primary">Crypto</span>Tracker
+          </Link>
 
           <label className="swap swap-rotate">
             {/* this hidden checkbox controls the state */}

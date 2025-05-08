@@ -1,16 +1,16 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import Coins from "./routes/Coins";
-import Coin from "./routes/Coin";
-import Layout from "./layout/layout";
+import Coin from "./routes/coin/Coin";
+import Layout from "./layout/Layout";
+import Home from "./routes/home/Home";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<Coins />} />
+        <Route index element={<Home />} />
+        <Route path=":coinId" element={<Coin />} />
       </Route>
-      <Route path="/:coinId" element={<Coin />} />
     </Routes>
   );
 }
