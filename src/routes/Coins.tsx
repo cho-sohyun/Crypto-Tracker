@@ -1,5 +1,5 @@
 const Coins = () => {
-  return <div>Coins</div>;
+  return <></>;
 };
 
 export default Coins;
