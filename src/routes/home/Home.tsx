@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
+import { useCoinData } from "../../hooks/useCoinData";
 
 const Home = () => {
-  const coins = [
-    { id: "bitcoin", name: "Bitcoin", symbol: "BTC" },
-    { id: "ethereum", name: "Ethereum", symbol: "ETH" },
-  ];
+  const { data: coins = [], isLoading, isError } = useCoinData();
 
   return (
     <main className="flex-1">
@@ -27,39 +25,49 @@ const Home = () => {
         </div>
 
         <div className="overflow-x-auto mt-6">
-          <table className="table">
-            {/* head */}
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>코인</th>
-                <th>가격</th>
-                <th>Favorite Color</th>
-              </tr>
-            </thead>
-            <tbody>
-              {coins.map((coin, index) => (
-                <tr key={coin.id} className="hover:bg-base-300">
-                  <th>{index + 1}</th>
+          {isLoading && (
+            <span className="loading loading-spinner text-primary"></span>
+          )}
+          {isError && <p>데이터 로딩 실패</p>}
 
-                  <td className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center">
-                      {coin.symbol.charAt(0)}
-                    </div>
-                    {coin.name}
-                  </td>
-                  <td>
-                    <Link
-                      to={`/${coin.id}`}
-                      className="text-blue-500 hover:underline"
-                    >
-                      상세보기
-                    </Link>
-                  </td>
+          {!isLoading && !isError && (
+            <table className="table">
+              {/* head */}
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>코인</th>
+                  <th>가격</th>
+                  <th>Favorite Color</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {coins.map((coin, index) => (
+                  <tr key={coin.id} className="hover:bg-base-300">
+                    <th>{index + 1}</th>
+
+                    <td className="flex items-center gap-2">
+                      <img
+                        src={`https://static.coinpaprika.com/coin/${coin.id}/logo.png`}
+                        className="w-6 h-6 flex items-center justify-center"
+                      />
+
+                      {coin.name}
+                    </td>
+                    <td>
+                      <Link
+                        to={`/${coin.id}`}
+                        state={{ name: coin.name }}
+                        className="text-blue-500 hover:underline"
+                      >
+                        상세보기
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </section>
     </main>
