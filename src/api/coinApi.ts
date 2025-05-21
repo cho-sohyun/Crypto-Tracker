@@ -1,18 +1,25 @@
-export interface CoinInterface {
-  id: string;
-  name: string;
-  symbol: string;
-  rank: number;
-  is_new: boolean;
-  is_active: boolean;
-  type: string;
-}
+import axios from "axios";
 
-export const fetchCoins = async (): Promise<CoinInterface[]> => {
-  const response = await fetch("https://api.coinpaprika.com/v1/coins");
-  if (!response.ok) {
-    throw new Error("Failed to fetch coin list");
-  }
-  const data = await response.json();
+export const API = axios.create({
+  baseURL: "https://api.coinpaprika.com/v1",
+});
+
+export const fetchCoins = async () => {
+  const { data } = await API.get("/coins");
   return data.slice(0, 100);
 };
+
+export const fetchTickers = async () => {
+  const { data } = await API.get("/tickers");
+  return data.slice(0, 100);
+};
+
+// export const fetchTicker = async ({
+//   queryKey,
+// }: {
+//   queryKey: [string, string];
+// }) => {
+//   const [, coinId] = queryKey;
+//   const { data } = await API.get(`/tickers/${coinId}`);
+//   return data;
+// };

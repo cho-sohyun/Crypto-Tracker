@@ -1,8 +1,18 @@
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { useCoinData } from "../../hooks/useCoinData";
+import { useTickersData } from "../../hooks/useTickerData";
+
+// 코인 리스트
+// 가격, 24시간 변동률, 거래량
+// 코인 검색
 
 const Home = () => {
   const { data: coins = [], isLoading, isError } = useCoinData();
+  const { data: tickers = [] } = useTickersData();
+  console.log(tickers);
+
+  const getTickerById = (coinId: string) =>
+    tickers.find((t) => t.id === coinId);
 
   return (
     <main className="flex-1">
@@ -38,33 +48,41 @@ const Home = () => {
                   <th>#</th>
                   <th>코인</th>
                   <th>가격</th>
-                  <th>Favorite Color</th>
+                  <th>24시간 변동률</th>
+                  <th>시가총액</th>
+                  <th>거래량(24h)</th>
                 </tr>
               </thead>
               <tbody>
-                {coins.map((coin, index) => (
-                  <tr key={coin.id} className="hover:bg-base-300">
-                    <th>{index + 1}</th>
+                {coins.map((coin, index) => {
+                  const ticker = getTickerById(coin.id);
+                  const price = ticker?.quotes?.USD?.price?.toFixed(2) ?? "N/A";
+                  const change =
+                    ticker?.quotes?.USD?.percent_change_24h?.toFixed(2) ??
+                    "N/A";
+                  const volume =
+                    ticker?.quotes?.USD?.volume_24h?.toFixed(2) ?? "N/A";
+                  const marketCap =
+                    ticker?.quotes?.USD.market_cap?.toFixed(2) ?? "N/A";
 
-                    <td className="flex items-center gap-2">
-                      <img
-                        src={`https://static.coinpaprika.com/coin/${coin.id}/logo.png`}
-                        className="w-6 h-6 flex items-center justify-center"
-                      />
-
-                      {coin.name}
-                    </td>
-                    <td>
-                      <Link
-                        to={`/${coin.id}`}
-                        state={{ name: coin.name }}
-                        className="text-blue-500 hover:underline"
-                      >
-                        상세보기
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
+                  return (
+                    <tr key={coin.id}>
+                      <td>{index + 1}</td>
+                      <td className="flex items-center gap-2">
+                        <img
+                          src={`https://static.coinpaprika.com/coin/${coin.id}/logo.png`}
+                          alt={coin.name}
+                          className="w-6 h-6"
+                        />
+                        {coin.name}
+                      </td>
+                      <td>${price}</td>
+                      <td>{change}%</td>
+                      <td>{marketCap}</td>
+                      <td>{volume}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           )}
