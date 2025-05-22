@@ -1,6 +1,7 @@
 // import { Link } from "react-router-dom";
 import { useCoinData } from "../../hooks/useCoinData";
 import { useTickersData } from "../../hooks/useTickerData";
+import { formatNumber } from "../../utils/FormatNumber";
 
 // 코인 리스트
 // 가격, 24시간 변동률, 거래량
@@ -9,10 +10,6 @@ import { useTickersData } from "../../hooks/useTickerData";
 const Home = () => {
   const { data: coins = [], isLoading, isError } = useCoinData();
   const { data: tickers = [] } = useTickersData();
-  console.log(tickers);
-
-  const getTickerById = (coinId: string) =>
-    tickers.find((t) => t.id === coinId);
 
   return (
     <main className="flex-1">
@@ -55,15 +52,11 @@ const Home = () => {
               </thead>
               <tbody>
                 {coins.map((coin, index) => {
-                  const ticker = getTickerById(coin.id);
-                  const price = ticker?.quotes?.USD?.price?.toFixed(2) ?? "N/A";
-                  const change =
-                    ticker?.quotes?.USD?.percent_change_24h?.toFixed(2) ??
-                    "N/A";
-                  const volume =
-                    ticker?.quotes?.USD?.volume_24h?.toFixed(2) ?? "N/A";
-                  const marketCap =
-                    ticker?.quotes?.USD.market_cap?.toFixed(2) ?? "N/A";
+                  const ticker = tickers.find((t) => t.id === coin.id);
+                  if (!ticker) return null;
+
+                  const { price, percent_change_24h, market_cap, volume_24h } =
+                    ticker.quotes.USD;
 
                   return (
                     <tr key={coin.id}>
@@ -76,10 +69,22 @@ const Home = () => {
                         />
                         {coin.name}
                       </td>
-                      <td>${price}</td>
-                      <td>{change}%</td>
-                      <td>{marketCap}</td>
-                      <td>{volume}</td>
+                      <td>{formatNumber(price)}</td>
+                      <td
+                        className={
+                          percent_change_24h > 0
+                            ? "text-green-600"
+                            : percent_change_24h < 0
+                            ? "text-red-600"
+                            : ""
+                        }
+                      >
+                        {percent_change_24h > 0
+                          ? `+${percent_change_24h.toFixed(2)}%`
+                          : `${percent_change_24h.toFixed(2)}%`}
+                      </td>
+                      <td>{formatNumber(market_cap)}</td>
+                      <td>{formatNumber(volume_24h)}</td>
                     </tr>
                   );
                 })}
