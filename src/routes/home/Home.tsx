@@ -48,7 +48,7 @@ const Home = () => {
                   <th>#</th>
                   <th>코인</th>
                   <th>가격</th>
-                  <th>24시간 변동률</th>
+                  <th>등락폭</th>
                   <th>시가총액</th>
                   <th>거래량(24h)</th>
                 </tr>
@@ -84,9 +84,9 @@ const Home = () => {
                       <td
                         className={
                           percent_change_24h > 0
-                            ? "text-green-600"
+                            ? "text-red-600 font-semibold"
                             : percent_change_24h < 0
-                            ? "text-red-600"
+                            ? "text-blue-600"
                             : ""
                         }
                       >
