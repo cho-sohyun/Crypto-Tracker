@@ -12,6 +12,7 @@ const Coin = () => {
   const { coinId } = useParams();
   const { state } = useLocation() as { state: RouteState };
   console.log(state?.name);
+  console.log(coinId);
 
   return (
     <div className="min-h-screen flex flex-col">

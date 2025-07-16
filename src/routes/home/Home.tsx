@@ -1,4 +1,5 @@
 // import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCoinData } from "../../hooks/useCoinData";
 import { useTickersData } from "../../hooks/useTickerData";
 import { formatNumber } from "../../utils/FormatNumber";
@@ -6,10 +7,12 @@ import { formatNumber } from "../../utils/FormatNumber";
 // 코인 리스트
 // 가격, 24시간 변동률, 거래량
 // 코인 검색
+// 호버시 하이라이트 및 페이지 이동
 
 const Home = () => {
   const { data: coins = [], isLoading, isError } = useCoinData();
   const { data: tickers = [] } = useTickersData();
+  const navigate = useNavigate();
 
   return (
     <main className="flex-1">
@@ -59,7 +62,15 @@ const Home = () => {
                     ticker.quotes.USD;
 
                   return (
-                    <tr key={coin.id}>
+                    <tr
+                      key={coin.id}
+                      className="hover:bg-gray-100 cursor-pointer"
+                      onClick={() =>
+                        navigate(`/coin/${coin.id}`, {
+                          state: { name: coin.name },
+                        })
+                      }
+                    >
                       <td>{index + 1}</td>
                       <td className="flex items-center gap-2">
                         <img
