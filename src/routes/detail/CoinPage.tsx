@@ -4,11 +4,11 @@ import { useCoinOhlcvData } from "../../hooks/useCoinOhlcvData";
 interface RouteState {
   name: string;
 }
-
-// 해당 코인 정보 (현재 가격, 시가총액, 거래량, 최고가)
-// 실시간 가격, 전일대비 얼마 상승?
-// 가격 차트 (1시간, 1일 ~ 1개월 전체)
+// 코인 상세
+// 실시간 가격, 전일대비 얼마 상승? - 완
+// 코인 그래프 (1시간, 1일 ~ 1개월 전체)
 // 일별로 가격 정보 ?
+// 해당 코인 정보 (현재 가격, 시가총액, 거래량, 최고가)
 // 코인 정보 소개 or 거래 상승률 Top10 (부가적인 기능)
 
 const Coin = () => {
@@ -21,9 +21,23 @@ const Coin = () => {
     isError,
   } = useCoinOhlcvData(coinId || "");
 
-  console.log(state?.name);
-  console.log(coinId);
-  console.log("데이터", ohlcvData);
+  // 전일 대비 상승률 계산
+  let currentPrice = null;
+  let priceChangePercent = null;
+  let priceChangeValue = null;
+
+  if (ohlcvData && ohlcvData.length >= 2) {
+    const todayClose = parseFloat(ohlcvData[ohlcvData.length - 1].close);
+    const yesterdayClose = parseFloat(ohlcvData[ohlcvData.length - 2].close);
+
+    currentPrice = todayClose.toFixed(2);
+
+    const diff = todayClose - yesterdayClose;
+    priceChangeValue = diff.toFixed(2);
+    priceChangePercent = ((diff / yesterdayClose) * 100).toFixed(2);
+  }
+
+  const isPositive = priceChangeValue && parseFloat(priceChangeValue) >= 0;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -39,11 +53,16 @@ const Coin = () => {
         {/* 에러 처리 */}
         {isError && <p>데이터를 불러오는 중 오류가 발생했습니다.</p>}
 
-        {!isLoading && !isError && ohlcvData && ohlcvData.length >= 2 && (
-          <div className="mt-4">
-            <p className="text-4xl font-bold">
-              현재가: $
-              {parseFloat(ohlcvData[ohlcvData.length - 1].close).toFixed(2)}
+        {!isLoading && !isError && currentPrice && (
+          <div className="mt-6 space-y-2">
+            <p className="text-4xl font-bold">현재가: $ {currentPrice}</p>
+            <p
+              className={`text-xl font-semibold ${
+                isPositive ? "text-red-500" : "text-blue-500"
+              }`}
+            >
+              전일 대비: {isPositive ? "+" : ""}${priceChangeValue} (
+              {priceChangePercent}%)
             </p>
           </div>
         )}
