@@ -1,14 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchTickers } from "../api/coinApi";
+import { fetchTickers } from "../utils/api/coinApi";
 
-// export const useTickerData = (coinId: string) => {
-//   return useQuery({
-//     queryKey: ["ticker", coinId],
-//     queryFn: fetchTickers,
-//     staleTime: 1000 * 60,
-//     enabled: !!coinId,
-//   });
-// };
+// 코인 정보
 
 export interface TickerUSD {
   price: number;

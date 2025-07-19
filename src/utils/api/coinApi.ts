@@ -13,13 +13,3 @@ export const fetchTickers = async () => {
   const { data } = await API.get("/tickers");
   return data.slice(0, 100);
 };
-
-// export const fetchTicker = async ({
-//   queryKey,
-// }: {
-//   queryKey: [string, string];
-// }) => {
-//   const [, coinId] = queryKey;
-//   const { data } = await API.get(`/tickers/${coinId}`);
-//   return data;
-// };

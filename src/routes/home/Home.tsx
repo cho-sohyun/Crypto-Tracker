@@ -42,7 +42,6 @@ const Home = () => {
 
           {!isLoading && !isError && (
             <table className="table">
-              {/* head */}
               <thead>
                 <tr>
                   <th>#</th>
@@ -60,6 +59,7 @@ const Home = () => {
 
                   const { price, percent_change_24h, market_cap, volume_24h } =
                     ticker.quotes.USD;
+                  console.log(ticker.quotes);
 
                   return (
                     <tr
