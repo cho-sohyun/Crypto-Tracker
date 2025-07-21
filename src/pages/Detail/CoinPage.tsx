@@ -1,5 +1,6 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useCoinOhlcvData } from "../../hooks/useCoinOhlcvData";
+import CoinChart from "./components/PriceChart";
 
 interface RouteState {
   name: string;
@@ -45,7 +46,14 @@ const Coin = () => {
         <button className="btn btn-sm">
           <Link to="/">돌아가기</Link>
         </button>
-        <h1 className="text-3xl font-bold">{state?.name || "Loading..."}</h1>
+        <h1 className="mt-4 text-3xl font-bold flex items-center">
+          <img
+            src={`https://static.coinpaprika.com/coin/${coinId}/logo.png`}
+            alt={state?.name || "coin logo"}
+            className="w-8 h-8 mr-2"
+          />
+          {state?.name || "Loading..."}
+        </h1>
 
         {/* 로딩 중 */}
         {isLoading && <p>데이터를 불러오는 중입니다...</p>}
@@ -54,16 +62,21 @@ const Coin = () => {
         {isError && <p>데이터를 불러오는 중 오류가 발생했습니다.</p>}
 
         {!isLoading && !isError && currentPrice && (
-          <div className="mt-6 space-y-2">
-            <p className="text-4xl font-bold">현재가: $ {currentPrice}</p>
+          <div className="mt-2 space-y-2">
+            <p className="text-4xl font-bold"> $ {currentPrice}</p>
             <p
-              className={`text-xl font-semibold ${
+              className={`text-sm font-semibold ${
                 isPositive ? "text-red-500" : "text-blue-500"
               }`}
             >
               전일 대비: {isPositive ? "+" : ""}${priceChangeValue} (
               {priceChangePercent}%)
             </p>
+
+            {/* 차트 렌더링 */}
+            <div className="mt-8">
+              <CoinChart ohlcvData={ohlcvData} />
+            </div>
           </div>
         )}
       </main>

@@ -1,8 +1,8 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import CoinPage from "./routes/detail/CoinPage";
+import CoinPage from "./pages/Detail/CoinPage";
 import Layout from "./layout/Layout";
-import Home from "./routes/home/Home";
+import Home from "./pages/Home/Home";
 
 function App() {
   return (
