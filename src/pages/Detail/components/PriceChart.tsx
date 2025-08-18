@@ -4,7 +4,7 @@ import type { ApexOptions } from "apexcharts";
 import type { OhlcvData } from "../../../hooks/useCoinOhlcvData";
 
 // 일자별 차트
-// 그래프 막대 호버시 가격 정보 (고가,저가,종가)
+// 그래프 막대 호버시 가격 정보 (고가, 저가, 종가)
 // 그래프 넓이 줄이기
 
 interface CoinChartProps {
@@ -31,8 +31,7 @@ const CoinChart: React.FC<CoinChartProps> = ({ ohlcvData }) => {
 
   const options: ApexOptions = {
     chart: {
-      height: 400,
-      type: "line", // 차트 전체 타입을 line으로 설정하고, 각 시리즈에 개별 타입 지정
+      type: "candlestick",
       toolbar: { show: true },
     },
     title: {
@@ -42,19 +41,32 @@ const CoinChart: React.FC<CoinChartProps> = ({ ohlcvData }) => {
     xaxis: {
       type: "datetime",
     },
-    yaxis: [
-      {
-        title: {
-          text: "가격 ($)",
-        },
-        tooltip: {
-          enabled: true,
-        },
+    yaxis: {
+      title: {
+        text: "가격 ($)",
       },
-    ],
+      tooltip: {
+        enabled: true,
+      },
+    },
     tooltip: {
       shared: true,
-      intersect: false,
+      custom: ({ seriesIndex, dataPointIndex, w }) => {
+        const ohlc =
+          w.globals.initialSeries[seriesIndex].data[dataPointIndex].y;
+        const [open, high, low, close] = ohlc;
+        return `
+          <div style="padding:6px">
+            <strong>${new Date(
+              w.globals.initialSeries[seriesIndex].data[dataPointIndex].x
+            ).toLocaleDateString()}</strong><br/>
+            시가: $${open.toLocaleString()} <br />
+            고가: $${high.toLocaleString()} <br/>
+            저가: $${low.toLocaleString()} <br/>
+            종가: $${close.toLocaleString()}
+          </div>
+        `;
+      },
     },
     plotOptions: {
       candlestick: {
@@ -71,7 +83,7 @@ const CoinChart: React.FC<CoinChartProps> = ({ ohlcvData }) => {
 
   const series = [
     {
-      name: "가격 흐름",
+      name: "OHLC",
       type: "candlestick" as const,
       data: candleSeries,
     },
@@ -86,7 +98,7 @@ const CoinChart: React.FC<CoinChartProps> = ({ ohlcvData }) => {
     <ReactApexChart
       options={options}
       series={series}
-      type="line"
+      type="candlestick"
       height={400}
     />
   );
