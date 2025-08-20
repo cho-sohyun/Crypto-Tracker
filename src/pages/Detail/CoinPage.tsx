@@ -1,6 +1,7 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useCoinOhlcvData } from "../../hooks/useCoinOhlcvData";
 import CoinChart from "./components/PriceChart";
+import { useTickersData } from "../../hooks/useTickerData";
 
 interface RouteState {
   name: string;
@@ -21,6 +22,17 @@ const Coin = () => {
     isLoading,
     isError,
   } = useCoinOhlcvData(coinId || "");
+
+  // 상승률 top 10용
+  const { data: tickers } = useTickersData();
+
+  const top10 =
+    tickers
+      ?.sort(
+        (a, b) =>
+          b.quotes.USD.percent_change_24h - a.quotes.USD.percent_change_24h
+      )
+      .slice(0, 10) || [];
 
   // 전일 대비 상승률 계산
   let currentPrice = null;
@@ -76,6 +88,112 @@ const Coin = () => {
             {/* 차트 렌더링 */}
             <div className="mt-8">
               <CoinChart ohlcvData={ohlcvData} />
+            </div>
+
+            {/* 시세 테이블 + 상승률 TOP10 */}
+            <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* 일자별 시세 테이블 */}
+              <div className="lg:col-span-2">
+                <table className="w-full text-sm border-t border-b border-gray-200">
+                  <thead>
+                    <tr>
+                      <th className="px-2 py-2 text-gray-500 font-medium">
+                        날짜
+                      </th>
+                      <th className="px-2 py-1  text-gray-500 font-medium">
+                        시가
+                      </th>
+                      <th className="px-2 py-1  text-gray-500 font-medium">
+                        등락폭
+                      </th>
+                      <th className="px-2 py-1  text-gray-500 font-medium">
+                        변동률
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ohlcvData
+                      ?.slice()
+                      .sort(
+                        (a, b) =>
+                          new Date(b.time_open).getTime() -
+                          new Date(a.time_open).getTime()
+                      )
+                      .map((d, i) => {
+                        const open = parseFloat(d.open);
+                        const close = parseFloat(d.close);
+                        const changeValue = close - open;
+                        const changePercent = (changeValue / open) * 100;
+
+                        const date = new Date(d.time_open * 1000);
+                        const dateStr = `${
+                          date.getMonth() + 1
+                        }/${date.getDate()}`;
+
+                        return (
+                          <tr key={i} className="border-b border-gray-200">
+                            <td className="px-2 py-4 text-center">{dateStr}</td>
+
+                            <td className="px-2 py-4 text-center">
+                              {open.toFixed(2)}
+                            </td>
+                            <td
+                              className={`px-2 py-4 text-center ${
+                                changeValue >= 0
+                                  ? "text-red-500"
+                                  : "text-blue-500"
+                              }`}
+                            >
+                              {changeValue >= 0 ? "+" : ""}
+                              {changeValue.toFixed(2)}
+                            </td>
+                            <td
+                              className={`px-2 py-4 text-center ${
+                                changePercent >= 0
+                                  ? "text-red-500"
+                                  : "text-blue-500"
+                              }`}
+                            >
+                              {changePercent >= 0 ? "+" : ""}
+                              {changePercent.toFixed(2)}%
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* 상승률 top 10 */}
+              <div>
+                <div className="bg-gray-100">
+                  <h2 className="text-lg mb-4">코인 상승률 TOP 10</h2>
+                  <ul>
+                    {top10.map((coin) => (
+                      <li
+                        key={coin.id}
+                        className="flex items-center py-1 border-b last:border-b-0"
+                      >
+                        <img
+                          src={`https://static.coinpaprika.com/coin/${coin.id}/logo.png`}
+                          alt={state?.name || "coin logo"}
+                          className="w-8 h-8 mr-2"
+                        />
+                        <span className="font-medium">{coin.name}</span>
+                        <span
+                          className={`font-semibold ${
+                            coin.quotes.USD.percent_change_24h > 0
+                              ? "text-red-500"
+                              : "text-blue-500"
+                          }`}
+                        >
+                          {coin.quotes.USD.percent_change_24h.toFixed(2)}%
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         )}

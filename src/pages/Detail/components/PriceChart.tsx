@@ -83,12 +83,10 @@ const CoinChart: React.FC<CoinChartProps> = ({ ohlcvData }) => {
 
   const series = [
     {
-      name: "OHLC",
       type: "candlestick" as const,
       data: candleSeries,
     },
     {
-      name: "종가",
       type: "line" as const,
       data: lineSeries,
     },
