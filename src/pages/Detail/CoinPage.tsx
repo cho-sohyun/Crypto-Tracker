@@ -102,19 +102,19 @@ const Coin = () => {
             <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* 일자별 시세 테이블 */}
               <div className="lg:col-span-2">
-                <table className="w-full text-sm border-t border-b border-gray-200">
+                <table className="w-full text-sm border-t border-b border-base-200">
                   <thead>
                     <tr>
-                      <th className="px-2 py-2 text-gray-500 font-medium">
+                      <th className="px-2 py-2 text-base-content font-medium">
                         날짜
                       </th>
-                      <th className="px-2 py-1  text-gray-500 font-medium">
+                      <th className="px-2 py-1 text-base-contentfont-medium">
                         시가
                       </th>
-                      <th className="px-2 py-1  text-gray-500 font-medium">
+                      <th className="px-2 py-1 text-base-contentfont-medium">
                         등락폭
                       </th>
-                      <th className="px-2 py-1  text-gray-500 font-medium">
+                      <th className="px-2 py-1 text-base-content font-medium">
                         변동률
                       </th>
                     </tr>
@@ -139,7 +139,7 @@ const Coin = () => {
                         }/${date.getDate()}`;
 
                         return (
-                          <tr key={i} className="border-b border-gray-200">
+                          <tr key={i} className="border-b border-base-200">
                             <td className="px-2 py-4 text-center">{dateStr}</td>
 
                             <td className="px-2 py-4 text-center">
@@ -174,7 +174,7 @@ const Coin = () => {
 
               {/* 상승률 top 10 */}
               <div>
-                <div className="bg-gray-50 p-4">
+                <div className="bg-base-200 p-4">
                   <h2 className="p-4 text-lg font-semibold">
                     코인 상승률 TOP 10
                   </h2>
@@ -187,7 +187,7 @@ const Coin = () => {
                             state: { name: coin.name },
                           })
                         }
-                        className="flex items-center justify-between py-4 px-2 border-b border-gray-200 last:border-b-0"
+                        className="cursor-pointer flex items-center justify-between py-4 px-2 border-b border-base-200 last:border-b-0"
                       >
                         <div className="flex items-center">
                           <img

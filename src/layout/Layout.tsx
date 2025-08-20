@@ -1,6 +1,12 @@
 import { Link, Outlet } from "react-router-dom";
 
 const Layout = () => {
+  const handleThemeToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    document.documentElement.setAttribute(
+      "data-theme",
+      e.target.checked ? "dark" : "light"
+    );
+  };
   return (
     <div className="h-[70px]">
       <header className="p-4 border-b border-gray-100">
@@ -12,7 +18,12 @@ const Layout = () => {
 
           <label className="swap swap-rotate">
             {/* this hidden checkbox controls the state */}
-            <input type="checkbox" className="theme-controller" value="dark" />
+            <input
+              type="checkbox"
+              className="theme-controller"
+              value="dark"
+              onChange={handleThemeToggle}
+            />
 
             {/* sun icon */}
             <svg

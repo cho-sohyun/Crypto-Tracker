@@ -6,7 +6,6 @@ import { formatNumber } from "../../utils/FormatNumber";
 
 // 코인 리스트
 // 가격, 24시간 변동률, 거래량
-// 코인 검색
 // 호버시 하이라이트 및 페이지 이동
 
 const Home = () => {
@@ -23,14 +22,6 @@ const Home = () => {
             <p className="text-sm mt-2">
               실시간 가격, 시가총액, 거래량 등 암호화폐 시장 정보를 확인하세요.
             </p>
-          </div>
-          <div className="w-full md:w-auto relative">
-            <button className="absolute left-2.5 top-2.5 h-4 w-4" />
-            <input
-              type="search"
-              placeholder="코인 검색..."
-              className="w-full md:w-[250px] pl-8"
-            />
           </div>
         </div>
 
@@ -59,12 +50,11 @@ const Home = () => {
 
                   const { price, percent_change_24h, market_cap, volume_24h } =
                     ticker.quotes.USD;
-                  console.log(ticker.quotes);
 
                   return (
                     <tr
                       key={coin.id}
-                      className="hover:bg-gray-100 cursor-pointer"
+                      className="hover:bg-base-300 cursor-pointer"
                       onClick={() =>
                         navigate(`/coin/${coin.id}`, {
                           state: { name: coin.name },
