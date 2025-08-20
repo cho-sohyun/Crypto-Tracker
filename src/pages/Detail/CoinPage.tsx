@@ -2,6 +2,7 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { useCoinOhlcvData } from "../../hooks/useCoinOhlcvData";
 import CoinChart from "./components/PriceChart";
 import { useTickersData } from "../../hooks/useTickerData";
+import { useNavigate } from "react-router-dom";
 
 interface RouteState {
   name: string;
@@ -16,6 +17,7 @@ interface RouteState {
 const Coin = () => {
   const { coinId } = useParams(); // url에서 coinId 추출
   const { state } = useLocation() as { state: RouteState };
+  const navigate = useNavigate();
 
   const {
     data: ohlcvData,
@@ -68,10 +70,16 @@ const Coin = () => {
         </h1>
 
         {/* 로딩 중 */}
-        {isLoading && <p>데이터를 불러오는 중입니다...</p>}
+        {isLoading && (
+          <p className="mt-6 text-gray-500">데이터를 불러오는 중입니다...</p>
+        )}
 
         {/* 에러 처리 */}
-        {isError && <p>데이터를 불러오는 중 오류가 발생했습니다.</p>}
+        {isError && (
+          <p className="mt-6 text-gray-500">
+            데이터를 불러오는 중 오류가 발생했습니다.
+          </p>
+        )}
 
         {!isLoading && !isError && currentPrice && (
           <div className="mt-2 space-y-2">
@@ -166,22 +174,32 @@ const Coin = () => {
 
               {/* 상승률 top 10 */}
               <div>
-                <div className="bg-gray-100">
-                  <h2 className="text-lg mb-4">코인 상승률 TOP 10</h2>
+                <div className="bg-gray-50 p-4">
+                  <h2 className="p-4 text-lg font-semibold">
+                    코인 상승률 TOP 10
+                  </h2>
                   <ul>
                     {top10.map((coin) => (
                       <li
                         key={coin.id}
-                        className="flex items-center py-1 border-b last:border-b-0"
+                        onClick={() =>
+                          navigate(`/coin/${coin.id}`, {
+                            state: { name: coin.name },
+                          })
+                        }
+                        className="flex items-center justify-between py-4 px-2 border-b border-gray-200 last:border-b-0"
                       >
-                        <img
-                          src={`https://static.coinpaprika.com/coin/${coin.id}/logo.png`}
-                          alt={state?.name || "coin logo"}
-                          className="w-8 h-8 mr-2"
-                        />
-                        <span className="font-medium">{coin.name}</span>
+                        <div className="flex items-center">
+                          <img
+                            src={`https://static.coinpaprika.com/coin/${coin.id}/logo.png`}
+                            alt={state?.name || "coin logo"}
+                            className="w-8 h-8 mr-2"
+                          />
+                          <span className="font-medium">{coin.name}</span>
+                        </div>
+
                         <span
-                          className={`font-semibold ${
+                          className={`font-semibold  ${
                             coin.quotes.USD.percent_change_24h > 0
                               ? "text-red-500"
                               : "text-blue-500"

@@ -38,6 +38,9 @@ const CoinChart: React.FC<CoinChartProps> = ({ ohlcvData }) => {
       text: "가격 차트",
       align: "left",
     },
+    legend: {
+      show: false,
+    },
     xaxis: {
       type: "datetime",
     },
