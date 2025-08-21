@@ -5,7 +5,6 @@ import type { OhlcvData } from "../../../hooks/useCoinOhlcvData";
 
 // 일자별 차트
 // 그래프 막대 호버시 가격 정보 (고가, 저가, 종가)
-// 그래프 넓이 줄이기
 
 interface CoinChartProps {
   ohlcvData?: OhlcvData[];
