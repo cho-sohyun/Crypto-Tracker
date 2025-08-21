@@ -101,8 +101,8 @@ const CoinChart: React.FC<CoinChartProps> = ({ ohlcvData }) => {
     plotOptions: {
       candlestick: {
         colors: {
-          upward: isDark ? "#3B82F6" : "#EF4444", // 상승
-          downward: isDark ? "#F97316" : "#3B82F6", // 하락
+          upward: "#EF4444",
+          downward: "#3B82F6",
         },
         wick: { useFillColor: true },
       },
